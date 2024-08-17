@@ -1,2 +1,4 @@
 .vscode
 .clangd
+*.un~
+*cpp~
