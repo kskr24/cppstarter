@@ -2,33 +2,42 @@
 
 using namespace std;
 
-vector<int> dp(300001);
-
 void solve() {
-  int a, b;
-  cin >> a >> b;
-  //
-  int needed = b ^ dp[a - 1];
+  int n, m;
 
-  if (needed == 0) {
-    std::cout << a << "\n";
-  } else if (needed == a) {
-    std::cout << a + 2 << "\n";
-  } else {
-    std::cout << a + 1 << "\n";
+  cin >> n >> m;
+
+  vector<long long> a(n), b(m);
+
+  for (int i = 0; i < n; ++i) {
+    cin >> a[i];
   }
+  for (int j = 0; j < m; ++j) {
+    cin >> b[j];
+  }
+
+  // prefix sum over a
+  vector<long long> pref(n + 1);
+  for (int i = 0; i < n; ++i) {
+    pref[i + 1] = pref[i] + a[i];
+  }
+
+  vector<vector<int>> dp(n + 1, vector<int>(m, 1e9));
+  // dp[i][j] = minimum cost to when we have removed i elements
+  // and value of k reached is j
+
+  dp[0][0] = 0;
+  
 }
 
 int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  // freopen("txt.in", "r", stdin);
+  // freopen("txt.out", "w", stdout);
   int t;
   cin >> t;
-  dp[0] = 0;
-  for (int i = 1; i < 300001; i++) {
-    dp[i] = dp[i - 1] ^ i;
-  }
-
   while (t--) {
     solve();
   }
-  return 0;
 }
