@@ -1,16 +1,14 @@
 #! /bin/bash
  
 # Generate the contents of a compile_commands.json file for the current
-# directory which should be the top of the oper1a repository.
- 
-OCI_PATH="/mnt/c/instantclient-sdk-windows.x64-12.1.0.2.0/instantclient_12_1/sdk/include"
-DB_CONNECTION_INCLUDE=/mnt/c/repository/private_include
+# directory which should be the top of the oper1a repository
+
 PWD=$(pwd)
  
 if [[ -z  "$COMPILE_FLAGS" ]]
 then
-    COMPILE_FLAGS="-I /mnt/c/repository/code/cpp \
-        -isystem /usr/include/boost -std=c++17"
+    COMPILE_FLAGS="-I /home/shkumar/repository/dev/cpp/cppstarter -I /usr/local/include/c++/15.0.0 -isystem /usr/local/lib/gcc/x86_64-pc-linux-gnu/15.0.0/include -isystem /usr/local/lib/gcc/x86_64-pc-linux-gnu/15.0.0/include-fixed \
+        -isystem /usr/local/include/boost -std=c++23"
 fi
  
 echo "["

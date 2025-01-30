@@ -1,43 +1,31 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cassert>
+#include <functional>
+#include <iostream>
+#include <numeric>
+#include <vector>
 
-using namespace std;
-
-void solve() {
-  int n, m;
-
-  cin >> n >> m;
-
-  vector<long long> a(n), b(m);
-
-  for (int i = 0; i < n; ++i) {
-    cin >> a[i];
-  }
-  for (int j = 0; j < m; ++j) {
-    cin >> b[j];
-  }
-
-  // prefix sum over a
-  vector<long long> pref(n + 1);
-  for (int i = 0; i < n; ++i) {
-    pref[i + 1] = pref[i] + a[i];
-  }
-
-  vector<vector<int>> dp(n + 1, vector<int>(m, 1e9));
-  // dp[i][j] = minimum cost to when we have removed i elements
-  // and value of k reached is j
-
-  dp[0][0] = 0;
-  
+void printVec(const std::vector<int>& vec) {
+  std::cout << "v = {";
+  for (char sep[]{0, ' ', 0}; const int i : vec)
+    std::cout << sep << i, sep[0] = ',';
+  std::cout << "};\n";
 }
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  // freopen("txt.in", "r", stdin);
-  // freopen("txt.out", "w", stdout);
-  int t;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  std::vector<int> v{5, 10, 6, 4, 3, 2, 6, 7, 9, 3};
+  printVec(v);
+
+  auto m = v.begin() + v.size() / 2;
+  std::nth_element(v.begin(), m, v.end());
+  std::cout << "\nThe median is " << v[v.size() / 2] << '\n';
+  // The consequence of the inequality of elements before/after the Nth one:
+  assert(std::accumulate(v.begin(), m, 0) < std::accumulate(m, v.end(), 0));
+  printVec(v);
+
+  // Note: comp function changed
+  std::nth_element(v.begin(), v.begin() + 1, v.end(), std::greater{});
+  std::cout << "\nThe second largest element is " << v[1] << '\n';
+  std::cout << "The largest element is " << v[0] << '\n';
+  printVec(v);
 }

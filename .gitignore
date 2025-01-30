@@ -1,3 +1,6 @@
 .vscode
 *.un~
 *cpp~
+bin/
+.cache
+compile_commands.json

@@ -1,4 +1,6 @@
 Diagnostics:
     UnusedIncludes: None
+    Suppress: [unknown_typename]
 CompileFlags:
-    Add: [-std=c++17]
+    Add: [-std=c++23]
+    Compiler: g++

@@ -1,52 +1,42 @@
 #include <bits/stdc++.h>
+
+#include <algorithm>
+
 using namespace std;
-
 void solve() {
-  vector<int> v{1, 4, 10, 12, 13};
+  int n;
+  cin >> n;
+  long long x, y, sum = 0, ans = 0;
+  cin >> x >> y;
+  vector<long long> v(n);
 
+  for (int i = 0; i < n; i++) {
+    cin >> v[i];
+    sum += v[i];
+  }
   std::sort(v.begin(), v.end());
 
-  int key;
-  cin >> key;
+  for (int i = 0; i < n; ++i) {
+    long long  low  = sum - v[i] - x;
+    long long high = sum - v[i] - y;
 
-  int ans = -1;
-  int l = 0, r = 4;
-  while (l <= r) {
-    int mid = (l + r) / 2;
+    auto left  = std::upper_bound(v.begin() + i + 1, v.end(), low);
+    auto right = std::lower_bound(v.begin() + i + 1, v.end(), high);
 
-    if (key == v[mid]) {
-      ans = mid;
-      break;
-    } else if (v[mid] > key) {
-      r = mid - 1;
-    } else {
-      l = mid + 1;
+    if (right <= left) {
+      long long diff = left - right;
+      //std::cout << v[i] << " " << diff << "\n";
+      ans += max(0ll, diff);
     }
   }
-
   std::cout << ans << "\n";
 }
 
-int binary_search(int l, int r, vector<int> v, int key) {
-  if (l > r) return -1;
-
-  int mid = (l + r) / 2;
-
-  if (v[mid] == key) {
-    return mid;
-  } else if (v[mid] < key) {
-    return binary_search(mid + 1, r, v, key);
-  } else {
-    return binary_search(l, mid - 1, v, key);
-  }
-}
-
 int main() {
-  solve();
-  // int t;
-  // cin >> t;
-  // while (t--) {
-  //   solve();
-  // }
-  // return 0;
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
+  return 0;
 }

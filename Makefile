@@ -1,4 +1,4 @@
-GCC_DIR := /usr
+GCC_DIR := /usr/local
 CXX := $(GCC_DIR)/bin/g++
 CPP := $(GCC_DIR)/bin/cpp
 
@@ -9,10 +9,10 @@ HDR := $(shell /usr/bin/find -L . -path ./.git -prune -o -name '*.hpp' -print)
 
 # Initialize common variables
 CPPFLAGS :=
-CXXFLAGS := -std=c++17
+CXXFLAGS := -std=c++23
 #LDFLAGS := -Wl,-rpath
 LDLIBS :=
-CONFIG += c++20
+CONFIG += c++23
 CPPFLAGS = -Wall -Wextra -g 
 
 CODE_DIR := ./

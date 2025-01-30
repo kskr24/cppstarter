@@ -1,51 +1,87 @@
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-void solve(){
-    long long a, b, c, d;
-    a = 0;
-    cin>>b>>c>>d;
-    int a_i, b_i, c_i, d_i;
-    for(int i = 0; i < 64; ++i){
-        // if the ith bit in d is 1
-        b_i = 1 & (1 << i);
-        c_i = 1 & (1 << i);
-        d_i = 1 & (1 << i);
+typedef long long              ll;
+typedef vector<int>            vi;
+typedef pair<int, int>         pii;
+typedef vector<pair<int, int>> vii;
 
-        if(d_i == 1){
-            if((b_i | c_i) == 0){
-                a_i = 1;
-            }else if(b_i == 1){
-                a_i = 0;
-            }else{
-                a = -1;
-                std::cout << i << " There\n";
-                break;
-            }
-        }else{
-            if((b_i & c_i) == 1){
-                a_i = 1;
-            }else if(b_i == 0){
-                a_i = 0;
-            }else{
-                std::cout << i << " Here\n";
-                a = -1;
-                break;
-            }
+#define pb push_back
+#define mp make_pair
+#define to(a, n) for (int i = a; i < n; i++)
+#define too(a, n) for (int i = a; i <= n; i++)
+#define fro(a, n) for (int i = n; i > a; i--)
+#define froo(a, n) for (int i = n; i >= a; i--)
+
+void solve() {
+  int n;
+  cin >> n;
+  string s;
+  cin >> s;
+
+  vector<vector<int>>            adj(n);
+  vector<vector<pair<int, int>>> len(n);
+  vector<vector<int>>            go(n, vector<int>(n));
+  vector<vector<int>>            dp(n, vector<int>(n));
+
+  for (int i = 1; i < n; i++) {
+    int a, b;
+    cin >> a >> b;
+    adj[--a].push_back(--b);
+    adj[b].push_back(a);
+  }
+
+  std::function<void(int, int, int, int)> dfs =
+      [&](int cur, int src, int p, int dist) {
+        go[src][cur] = p;
+        len[dist].push_back({src, cur});
+        for (int edge_node : adj[cur]) {
+          if (edge_node == p) continue;
+          dfs(edge_node, src, cur, dist + 1);
         }
-        std::cout << "a_i " << a_i << "\n";
-        a += (a_i * (1 << i));
+        return;
+      };
+
+  for (int i = 0; i < n; i++) {
+    dfs(i, i, i, 0);
+  }
+
+  for (int i = 0; i < n; i++) {
+    for (auto p : len[i]) {
+      int u = p.first;
+      int v = p.second;
+      if (i == 0)
+        dp[u][v] = 1;
+      else if (i == 1)
+        dp[u][v] = 1 + (s[u] == s[v]);
+      else {
+        int x = dp[u][go[u][v]];
+        int y = dp[v][go[v][u]];
+        int z = dp[go[v][u]][go[u][v]] + 2 * (s[u] == s[v]);
+
+        dp[u][v] = max({x, y, z});
+      }
     }
-    std::cout << a << '\n';
+  }
 
+  int ans = INT_MIN;
 
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      ans = max(ans, dp[i][j]);
+    }
+  }
+  cout << ans << "\n";
+
+  return;
 }
+
 int main() {
-    int t;
-    cin>>t;
-    while(t--){
-        solve();
-    }
-    return 0;
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
+  return 0;
 }
