@@ -2,79 +2,56 @@
 
 using namespace std;
 
-typedef long long              ll;
-typedef vector<int>            vi;
-typedef pair<int, int>         pii;
-typedef vector<pair<int, int>> vii;
-
-#define pb push_back
-#define mp make_pair
-#define to(a, n) for (int i = a; i < n; i++)
-#define too(a, n) for (int i = a; i <= n; i++)
-#define fro(a, n) for (int i = n; i > a; i--)
-#define froo(a, n) for (int i = n; i >= a; i--)
-
 void solve() {
-  int n;
-  cin >> n;
-  string s;
-  cin >> s;
+  int n, s1, s2;
+  cin >> n >> s1 >> s2;
+  vector<vector<int>> G1(n);
+  vector<vector<int>> G2(n);
 
-  vector<vector<int>>            adj(n);
-  vector<vector<pair<int, int>>> len(n);
-  vector<vector<int>>            go(n, vector<int>(n));
-  vector<vector<int>>            dp(n, vector<int>(n));
-
-  for (int i = 1; i < n; i++) {
-    int a, b;
+  int m1;
+  cin >> m1;
+  int a, b;
+  for (int i = 0; i < m1; ++i) {
     cin >> a >> b;
-    adj[--a].push_back(--b);
-    adj[b].push_back(a);
+    a--, b--;
+    G1[a].push_back(b);
+    G2[b].push_back(a);
   }
 
-  std::function<void(int, int, int, int)> dfs =
-      [&](int cur, int src, int p, int dist) {
-        go[src][cur] = p;
-        len[dist].push_back({src, cur});
-        for (int edge_node : adj[cur]) {
-          if (edge_node == p) continue;
-          dfs(edge_node, src, cur, dist + 1);
+  int m2;
+  cin >> m2;
+  for (int i = 0; i < m2; ++i) {
+    cin >> a >> b;
+    a--, b--;
+    G1[a].push_back(b);
+    G2[b].push_back(a);
+  }
+
+  int ans = 0;
+  // Dijkstra
+  vector<vector<int>> d(n, vector<int>(n, 1e9));
+  d[s1][s2] = 0;
+
+  std::set<std::pair<int, std::pair<int, int>>> st;
+  st.insert(std::make_pair(0, {s1, s2}));
+
+  while (!st.empty()) {
+    auto [u1, u2] = st.begin()->second;
+    st.erase(st.begin());
+
+    for (auto v1 : G1[u1]) {
+      for (auto v2 : G2[u2]) {
+        int wt = abs(u1 - u2);
+        if (d[v1][v2] < d[u1][u2] + wt) {
+          st.erase({d[v1][v2], {v1, v2}});
+          d[v1][v2] = d[u1][u2] + wt;
+          st.insert({d[v1][v2], {v1, v2}});
         }
-        return;
-      };
-
-  for (int i = 0; i < n; i++) {
-    dfs(i, i, i, 0);
-  }
-
-  for (int i = 0; i < n; i++) {
-    for (auto p : len[i]) {
-      int u = p.first;
-      int v = p.second;
-      if (i == 0)
-        dp[u][v] = 1;
-      else if (i == 1)
-        dp[u][v] = 1 + (s[u] == s[v]);
-      else {
-        int x = dp[u][go[u][v]];
-        int y = dp[v][go[v][u]];
-        int z = dp[go[v][u]][go[u][v]] + 2 * (s[u] == s[v]);
-
-        dp[u][v] = max({x, y, z});
       }
     }
+
+    // relax all the edges
   }
-
-  int ans = INT_MIN;
-
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      ans = max(ans, dp[i][j]);
-    }
-  }
-  cout << ans << "\n";
-
-  return;
 }
 
 int main() {
