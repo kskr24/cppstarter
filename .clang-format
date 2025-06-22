@@ -1,6 +1,7 @@
 ---
 Language:        Cpp
-BasedOnStyle:  Google
+BasedOnStyle:  LLVM
+PointerAlignment: Left
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 AllowAllParametersOfDeclarationOnNextLine: false

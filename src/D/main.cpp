@@ -1,57 +1,63 @@
 #include <bits/stdc++.h>
+#include <array>
+#include <climits>
+#include <iterator>
 
 using namespace std;
 
 void solve() {
-  int n, s1, s2;
-  cin >> n >> s1 >> s2;
-  vector<vector<int>> G1(n);
-  vector<vector<int>> G2(n);
-
-  int m1;
-  cin >> m1;
-  int a, b;
-  for (int i = 0; i < m1; ++i) {
-    cin >> a >> b;
-    a--, b--;
-    G1[a].push_back(b);
-    G2[b].push_back(a);
+  long long n;
+  cin >> n;
+  std::map<long long, long long> row, col;
+  for (int i = 0; i < n; ++i) {
+    long long x, y;
+    cin >> x >> y;
+    row[x]++;
+    col[y]++;
   }
 
-  int m2;
-  cin >> m2;
-  for (int i = 0; i < m2; ++i) {
-    cin >> a >> b;
-    a--, b--;
-    G1[a].push_back(b);
-    G2[b].push_back(a);
-  }
+  auto top    = row.begin();
+  auto bottom = row.rbegin();
 
-  int ans = 0;
-  // Dijkstra
-  vector<vector<int>> d(n, vector<int>(n, 1e9));
-  d[s1][s2] = 0;
+  auto left  = col.begin();
+  auto right = col.rbegin();
 
-  std::set<std::pair<int, std::pair<int, int>>> st;
-  st.insert(std::make_pair(0, {s1, s2}));
-
-  while (!st.empty()) {
-    auto [u1, u2] = st.begin()->second;
-    st.erase(st.begin());
-
-    for (auto v1 : G1[u1]) {
-      for (auto v2 : G2[u2]) {
-        int wt = abs(u1 - u2);
-        if (d[v1][v2] < d[u1][u2] + wt) {
-          st.erase({d[v1][v2], {v1, v2}});
-          d[v1][v2] = d[u1][u2] + wt;
-          st.insert({d[v1][v2], {v1, v2}});
-        }
-      }
+  // reduce from the top
+  long long ans = LONG_LONG_MAX;
+  if (row.size() > 1) {
+    auto      nxt        = std::next(top);
+    long long new_height = bottom->first - nxt->first + 1;
+    long long new_width  = right->first - left->first + 1;
+    if (new_height * new_width >= n) {
+      ans = min(ans, new_height * new_width);
     }
 
-    // relax all the edges
+    auto prv   = std::prev(bottom);
+    new_height = prv->first - top->first + 1;
+    new_width  = right->first - left->first;
+
+    if (new_height * new_width >= n) {
+      ans = min(ans, new_height * new_width);
+    }
   }
+
+  if (col.size() > 1) {
+    auto      nxt        = std::next(left);
+    long long new_width  = right->first - nxt->first + 1;
+    long long new_height = bottom->first - top->first + 1;
+    if (new_height * new_width >= n) {
+      ans = min(ans, new_height * new_width);
+    }
+
+    auto prv   = std::prev(right);
+    new_width  = prv->first - left->first + 1;
+    new_height = bottom->first - top->first + 1;
+    if (new_height * new_width >= n) {
+      ans = min(ans, new_height * new_width);
+    }
+  }
+
+  std::cout << ans << "\n";
 }
 
 int main() {

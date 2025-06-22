@@ -2,67 +2,45 @@
 
 using namespace std;
 
-template <typename T>
-T& smax(T& a, T& b) {
+template <typename T> T& smax(T& a, T& b) {
   a = max(a, b);
   return a;
 }
 
-template <typename T>
-T& smin(T& a, T& b) {
+template <typename T> T& smin(T& a, T& b) {
   a = max(a, b);
   return a;
 }
 
 void solve() {
   int n;
-  std::cin >> n;
-  vector<vector<int>> adj(n);
-  vector<int>         deg(n, 0);
-  for (int i = 1; i < n; ++i) {
-    int a, b;
-    cin >> a >> b;
-    a--;
-    b--;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-    // update the degrees vector
-    deg[a]++;
-    deg[b]++;
+  cin >> n;
+  vector<int> v(n);
+
+  for (int i = 0; i < n; ++i) {
+    cin >> v[i];
   }
-  int ans = 0;
 
-  std::function<int(int, int)> dfs = [&](int u, int par) {
-    vector<int> nodes;
-    int         max_child = 0;
-    for (auto v : adj[u]) {
-      if (v == par) continue;
-      smax(max_child, deg[v]);
-      int val = dfs(v, u);
-      ans     = max(ans, val + deg[u] - 1);
-      nodes.push_back(max(val, deg[v]));
-    }
-    sort(nodes.begin(), nodes.end(), greater<int>());
-    if (max_child != 0) {
-      ans = max(ans, max_child + deg[u] - 2);
-    }
-    if (nodes.size() > 1) {
-      ans = max(ans, nodes[0] + nodes[1] - 1);
-    }
-    int rv;
+  vector<int> sizes;
 
-    if (nodes.empty()) {
-      rv = max_child;
+  int cnt = 1;
+  for (int i = 1; i < n; ++i) {
+    if (v[i] <= v[i - 1] + 1) {
+      if (v[i] == v[i - 1])
+        continue;
+      cnt++;
     } else {
-      rv = max(max_child, nodes[0]);
+      sizes.push_back(cnt);
+      cnt = 1;
     }
+  }
+  sizes.push_back(cnt);
 
-    // std::cout << "Node: " << u << " "
-    //           << "return_value: " << rv << "\n";
-    return rv;
-  };
+  long long ans = 0;
 
-  dfs(0, -1);
+  for (auto& x : sizes) {
+    ans += (x + 1) / 2;
+  }
   std::cout << ans << "\n";
 }
 

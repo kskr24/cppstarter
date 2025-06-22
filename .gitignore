@@ -3,4 +3,5 @@
 *cpp~
 bin/
 .cache
+src/*/main.o
 compile_commands.json
