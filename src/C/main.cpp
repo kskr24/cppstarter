@@ -12,37 +12,7 @@ template <typename T> T& smin(T& a, T& b) {
   return a;
 }
 
-void solve() {
-  int n;
-  cin >> n;
-  vector<int> v(n);
-
-  for (int i = 0; i < n; ++i) {
-    cin >> v[i];
-  }
-
-  vector<int> sizes;
-
-  int cnt = 1;
-  for (int i = 1; i < n; ++i) {
-    if (v[i] <= v[i - 1] + 1) {
-      if (v[i] == v[i - 1])
-        continue;
-      cnt++;
-    } else {
-      sizes.push_back(cnt);
-      cnt = 1;
-    }
-  }
-  sizes.push_back(cnt);
-
-  long long ans = 0;
-
-  for (auto& x : sizes) {
-    ans += (x + 1) / 2;
-  }
-  std::cout << ans << "\n";
-}
+void solve() {}
 
 int main() {
   // ios_base::sync_with_stdio(false);

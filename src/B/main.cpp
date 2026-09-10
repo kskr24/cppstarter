@@ -1,46 +1,36 @@
 #include <bits/stdc++.h>
+#include <unistd.h>
+#include <mutex>
+#include <thread>
 
 using namespace std;
 
-void solve() {
-  int n, k;
-  cin >> n >> k;
-
-  std::string s;
-  cin >> s;
-  int zero = 0, one = 0;
-
-  for (int i = 0; i < n / 2; ++i) {
-    if (s[i] == s[n - i - 1]) {
-      zero += (s[i] == '0');
-      one += (s[i] == '1');
+class ThreadGuard {
+public:
+  explicit ThreadGuard(std::thread& t) : t_(t) {}
+  
+  ~ThreadGuard() {
+    if (t_.joinable()) {
+      t_.join();
     }
   }
-  int good = zero + one;
 
-  int bad_pairs         = n / 2 - good;
-  int good_pairs_needed = k - good;
+private:
+  std::thread& t_;
+};
 
-  if (good_pairs_needed >= 0) {
-    if (good_pairs_needed % 2 == 0 && good_pairs_needed <= bad_pairs) {
-      std::cout << "YES\n";
-    } else {
-      std::cout << "NO\n";
-    }
-  } else {
-    int rem = (good - k);
-    if (rem % 2 == 0 && (zero >= rem/2 && one >= rem/2)) {
-      std::cout << "YES\n";
-    } else {
-      std::cout << "NO\n";
-    }
-  }
-}
+void solve() { std::cout << "From the new thread\n"; }
+
 int main() {
-  int t;
-  cin >> t;
-  while (t--) {
-    solve();
-  }
+  // int t;
+  // cin >> t;
+  // while (t--) {
+  //   solve();
+  // }
+  std::cout << "Starting the main thread\n";
+  std::thread t(solve);
+  ThreadGuard guard(t);
+  sleep(5);
+  std::cout << "Exiting the main thread\n";
   return 0;
 }

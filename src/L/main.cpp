@@ -1,7 +1,10 @@
 #include <bits/stdc++.h>
+#include <sys/types.h>
 #include <algorithm>
 #include <iterator>
 #include <memory>
+#include <mutex>
+#include <numeric>
 #include <string>
 
 using namespace std;
@@ -59,7 +62,6 @@ class LRUCache {
 
 public:
   LRUCache(int cap) : capacity(cap) { cache = make_unique<LinkedList>(); }
-
   void put(int key, int value) {
     if (key_node_address.find(key) != key_node_address.end()) {
       Node* node       = key_node_address[key];
@@ -97,16 +99,4 @@ private:
   int                         capacity;
 };
 
-int main() {
-  LRUCache cache(2);
-  cache.put(1, 1);
-  cache.put(2, 2);
-  std::cout << cache.get(1) << std::endl;
-  cache.put(3, 3);
-  std::cout << cache.get(2) << std::endl;
-  cache.put(4, 4);
-  std::cout << cache.get(1) << std::endl;
-  std::cout << cache.get(3) << std::endl;
-  std::cout << cache.get(4) << std::endl;
-  return 0;
-}
+int main() { return 0; }
