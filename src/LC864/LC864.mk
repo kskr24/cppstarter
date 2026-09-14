@@ -1,2 +1,2 @@
-bin/L: src/L/main.o
+bin/LC864: src/LC864/main.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
