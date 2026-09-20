@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <leetcode_number>" >&2
+  echo "Usage: $0 <problem_number>" >&2
   exit 1
 fi
 
-name="LC$1"
+name="$1"
 dir="src/${name}"
 
 if [[ -d "$dir" ]]; then
@@ -17,7 +17,7 @@ fi
 mkdir -p "$dir"
 
 cat > "${dir}/main.cpp" <<EOF
-// LC $1.
+// $1
 #include <array>
 #include <queue>
 #include <vector>
