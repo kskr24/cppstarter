@@ -14,7 +14,7 @@ HDR := $(shell /usr/bin/find -L . -path ./.git -prune -o -name '*.hpp' -print)
 # Initialize common variables
 CPPFLAGS :=
 CXXFLAGS := -std=c++23
-#LDFLAGS := -Wl,-rpath
+LDFLAGS := -Wl,-rpath,$(GCC_DIR)/lib64
 LDLIBS :=
 CONFIG += c++23
 # -Wthread-safety is a Clang-only diagnostic; GCC rejects it.

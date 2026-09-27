@@ -9,6 +9,7 @@ public:
   std::vector<std::vector<std::pair<int, int>>> adj;
   void                                          dijkstra1(int s);
   void                                          dijkstra2(int s);
+  void                                          articulate_points();
   static constexpr int                          INF = 1e9;
 };
 
@@ -57,4 +58,10 @@ void Graph::dijkstra2(int s) {
       pq.emplace(dist[v], v);
     }
   }
+}
+
+
+
+void Graph::articulate_points(){
+  int Time = 0;
 }

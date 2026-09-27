@@ -12,3 +12,5 @@ Diagnostics:
 CompileFlags:
     Add: [-std=c++23]
     Compiler: g++
+Completion:
+    HeaderInsertion: Never
