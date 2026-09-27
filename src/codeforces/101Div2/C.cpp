@@ -14,6 +14,13 @@ template <typename T> T& smin(T& a, T& b) {
 
 void solve() {}
 
+class Solution {
+public:
+    int reverseDegree(string s) {
+        return 0;
+    }
+};
+
 int main() {
   // ios_base::sync_with_stdio(false);
   // cin.tie(NULL);

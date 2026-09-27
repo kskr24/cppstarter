@@ -15,8 +15,8 @@ void solve() {
   for (auto i{0}; i < m; ++i) {
     cin >> girls[i];
   }
-  sort(boys);
-  sort(girls);
+  std::ranges::sort(boys);
+  std::ranges::sort(girls);
 
   int i = 0, j = 0;
   int ans = 0;

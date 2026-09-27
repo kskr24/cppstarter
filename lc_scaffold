@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: $0 <cses|leetcode> <name>" >&2
+  echo "       $0 <codeforces|cf> <contest> <letter>" >&2
+  exit 1
+}
+
+[[ $# -ge 2 ]] || usage
+
+platform_raw="$1"
+case "$(tr '[:upper:]' '[:lower:]' <<< "$platform_raw")" in
+  cses) platform=cses ;;
+  lc | leetcode) platform=leetcode ;;
+  cf | codeforces) platform=codeforces ;;
+  *)
+    echo "Error: unknown platform '$platform_raw' (expected cses, leetcode/lc, or codeforces/cf)" >&2
+    exit 1
+    ;;
+esac
+
+if [[ "$platform" == codeforces ]]; then
+  [[ $# -eq 3 ]] || usage
+  contest="$2"
+  letter="$3"
+  dir="src/codeforces/${contest}"
+  file="${dir}/${letter}.cpp"
+else
+  [[ $# -eq 2 ]] || usage
+  name="$2"
+  dir="src/${platform}"
+  file="${dir}/${name}.cpp"
+fi
+
+if [[ -f "$file" ]]; then
+  echo "Error: $file already exists" >&2
+  exit 1
+fi
+
+mkdir -p "$dir"
+
+cat > "$file" <<EOF
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void solve() {}
+
+int main() {
+  int t;
+  cin >> t;
+  while (t--) {
+    solve();
+  }
+}
+EOF
+
+# One .mk per platform folder handles every problem (and, for codeforces, every contest) within it.
+mk="src/${platform}/${platform}.mk"
+if [[ ! -f "$mk" ]]; then
+  upper=$(tr '[:lower:]' '[:upper:]' <<< "$platform")
+  if [[ "$platform" == codeforces ]]; then
+    cat > "$mk" <<EOF
+${upper}_SRC := \$(wildcard src/codeforces/*/*.cpp)
+${upper}_EXE := \$(patsubst src/codeforces/%.cpp,bin/codeforces/%,\$(${upper}_SRC))
+
+\$(${upper}_EXE): bin/codeforces/%: src/codeforces/%.o
+	mkdir -p \$(dir \$@)
+	\$(CXX) -o \$@ \$^ \$(LDFLAGS)
+
+EXE += \$(${upper}_EXE)
+EOF
+  else
+    cat > "$mk" <<EOF
+${upper}_SRC := \$(wildcard src/${platform}/*.cpp)
+${upper}_EXE := \$(patsubst src/${platform}/%.cpp,bin/${platform}/%,\$(${upper}_SRC))
+
+\$(${upper}_EXE): bin/${platform}/%: src/${platform}/%.o | bin/${platform}
+	\$(CXX) -o \$@ \$^ \$(LDFLAGS)
+
+bin/${platform}:
+	mkdir -p \$@
+
+EXE += \$(${upper}_EXE)
+EOF
+  fi
+  echo "Created ${mk}"
+fi
+
+echo "Created ${file}"

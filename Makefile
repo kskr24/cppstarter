@@ -70,10 +70,10 @@ endif
 all : exe
 
 clean: temp_clean
-	rm -f bin/*
+	rm -rf bin/*
 
 temp_clean:
-	rm -f src/*/main.o src/*/test.o
+	find src -name '*.o' -delete
 
 exe: $(EXE) temp_clean
 
